@@ -25,9 +25,7 @@ Build a simulation that mimics how a real call center operates over time, assign
 - [Call Assignment](#call-assignment)
 - [Commands & Example](#commands--example)
 - [STATUS Output Example](#status-output-example)
-- [Contributing](#contributing)
-- [License](#license)
-
+  
 ---
 
 ## 📞 Call Types
@@ -150,20 +148,4 @@ Missed Calls: 1
 
 ---
 
-## Contributing
 
-Contributions, issues, and feature requests are welcome. Please open an issue or submit a pull request with a clear description of the change.
-
----
-
-## License
-
-Include your license here (e.g., MIT). If you don't have one yet, consider adding an open-source license.
-
----
-
-If you'd like, I can:
-- Add usage examples with sample command sequences and expected output,
-- Provide a "How to run" section with build/run instructions,
-- Or format the README with badges and CI links.
-Tell me which additions you prefer and I’ll update the file.
