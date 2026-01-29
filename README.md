@@ -1,179 +1,173 @@
-🧠 Intelligent Call Center Director
+I've rewritten and polished your README for clarity, structure, and visual appeal. Below is the updated README.md — review it and tell me if you'd like different wording, more examples, or expanded setup/run instructions.
 
-This problem asks you to simulate a busy call center system that distributes calls to agents intelligently based on:
+````markdown name=README.md url=https://github.com/amoori01/Intelligent-Call-Center-Director/blob/bc13d154c216dcd54af8b0df5eab2a7608391b3d/README.md
+# 🧠 Intelligent Call Center Director
 
-Call priority
+Simulate a busy call center that distributes calls to agents intelligently based on:
+- Call priority
+- Waiting time
+- Agent availability
 
-Waiting time
+This repository models a step-by-step simulation where every step is a single unit of time called a `TICK`.
 
-Agent availability
+---
 
-🎯 System Objective
+## 🎯 Objective
 
-To build a program that simulates how a real call center operates over time.
+Build a simulation that mimics how a real call center operates over time, assigning calls to agents and handling escalation, abandonment, and prioritization.
 
-Everything happens step by step using a command called:
+---
 
-👉 TICK = the passage of one unit of time
+## Table of Contents
 
-📞 Types of Calls
+- [Call Types](#call-types)
+- [Call Data](#call-data)
+- [Data Structures](#data-structures)
+- [System Rules](#system-rules)
+- [Time and TICK](#time-and-tick)
+- [Call Assignment](#call-assignment)
+- [Commands & Example](#commands--example)
+- [STATUS Output Example](#status-output-example)
+- [Contributing](#contributing)
+- [License](#license)
 
-There are only two types of calls:
+---
 
-Type	Description	Priority
-General	General inquiry	Normal
-Tech	Technical support	High
-🧾 Information for Each Call
+## 📞 Call Types
 
-Each call contains:
+There are two call types:
 
-timestamp → time of arrival
+- **General** — General inquiry (Priority: Normal)
+- **Tech** — Technical support (Priority: High)
 
-customer_id → customer number
+---
 
-type → General or Tech
+## 🧾 Call Data
 
-Waiting time (calculated automatically)
+Each call includes:
+- `timestamp` — time of arrival
+- `customer_id` — customer identifier
+- `type` — `General` or `Tech`
+- `waiting_time` — computed automatically in the simulation
 
-🧩 Required Data Structures
-1️⃣ Circular Queue
+---
 
-Used for:
+## 🧩 Required Data Structures
 
-🔹 General calls
+1. **Circular Queue**  
+   - Used for General calls  
+   - Enforces strict FIFO order and models limited capacity
 
-Reason:
+2. **Linked List / Deque**  
+   - Used for the High Priority queue (Tech + Escalated calls)  
+   - Allows insertion from both ends and flexible reordering for escalations
 
-Strict FIFO order (First In, First Out)
+3. **List of Agent Objects**  
+   Each agent has:
+   - `ID`
+   - `Status` (Busy / Available)
+   - `current_call` (call being handled)
+   - `remaining_time` (time left to finish the call)
 
-Limited capacity
+---
 
-Realistic representation of call centers
+## ⏱️ System Rules
 
-2️⃣ Linked List / Deque
+1. **Priority**  
+   - Agents always serve High Priority calls first, then General calls.
 
-Used for:
+2. **Escalation**  
+   - If a General call waits more than **10** time units it is escalated to High Priority and moved to the *end* of the high-priority queue.
 
-🔹 High Priority Queue (Tech + Escalated calls)
+3. **Call Abandonment**  
+   - If any call waits more than **20** time units, the caller hangs up. The call is removed and counted as a **MISSED** call.
 
-Reason:
+---
 
-Insertion from multiple ends
+## ⏳ Time (TICK)
 
-Flexible when escalation happens
+Each `TICK` (one time unit) triggers:
+- Global time increment by 1
+- Decrement of `remaining_time` for busy agents
+- Agents finishing calls become available
+- New calls are assigned (see assignment rules)
+- Escalation checks for long-waiting General calls
+- Abandonment checks for calls waiting > 20 units
 
-3️⃣ List of Agent Objects
+---
 
-Represents the employees.
-
-Each agent has:
-
-ID
-
-Status (Busy / Available)
-
-The call being handled
-
-Remaining time to finish the call
-
-⏱️ System Rules
-🔺 1. Priority
-
-Agents always take High Priority calls first
-
-Then General calls
-
-🔁 2. Escalation
-
-If:
-
-🟡 a General call
-⏱️ waits more than 10 time units
-
-➡️ it becomes High Priority
-➡️ it is moved to the end of the high-priority queue
-
-❌ 3. Call Abandonment
-
-If any call:
-
-⏱️ waits more than 20 time units
-
-📴 the customer hangs up
-❌ the call is removed from the queue
-📊 it is recorded as a MISSED call
-
-⏳ Time (TICK)
-
-Every time the command is executed:
-
-TICK
-
-
-The following happens:
-
-Time increases by 1
-
-Remaining time for agents’ calls decreases
-
-If a call finishes → the agent becomes available
-
-New calls are assigned
-
-Escalation is checked
-
-Call abandonment is checked
-
-🧑‍💼 Call Assignment
+## 🧑‍💼 Call Assignment
 
 When an agent becomes available:
+1. Take the next call from the **High Priority Queue**
+2. If it is empty, take the next call from the **General Queue**
 
-1️⃣ Take from the High Priority Queue
-2️⃣ If empty → take from the General Queue
+---
 
-🧪 Simple Example
+## 🧪 Simple Example
+
 Commands:
+```
 ASSIGN_AGENTS 2
 CALL C1 General 0
 CALL C2 Tech 0
+TICK
+```
 
-At TICK:
+At the first `TICK`:
+- Agent 1 → C2 (Tech, High Priority)
+- Agent 2 → C1 (General)
 
-Agent 1 takes C2 (Tech)
+Escalation example:
+- A General call C3 waits > 10 ticks → moved to High Priority queue (end).
 
-Agent 2 takes C1 (General)
+Abandonment example:
+- Any call waiting > 20 ticks → removed and counted as MISSED.
 
-Because:
-👉 Technical support has higher priority.
+---
 
-After 10 time units:
+## 📊 STATUS Command Displays
 
-C3 was a General call
-
-It waited more than 10 units
-
-➡️ It is escalated to High Priority
-
-After 20 time units:
-
-Any call not yet served
-
-❌ is removed
-📌 counted as a missed call (MISSED)
-
-📊 STATUS Command Displays:
-
-High Priority Queue
-
-General Queue
-
-Busy agents
-
-Number of missed calls
+The `STATUS` command should show:
+- High Priority Queue (order)
+- General Queue (order)
+- Busy agents and their assigned calls
+- Number of missed calls
 
 Example:
-
+```
 High Priority Queue: [C3]
 General Queue: [C4]
 Busy Agents: [Ag1: C2, Ag2: C1]
 Missed Calls: 1
+```
+
+---
+
+## ✅ Implementation Notes & Suggestions
+
+- Use the Circular Queue with a fixed capacity to model real-world queue limits.
+- Implement the High Priority queue as a deque to allow escalated calls to be appended.
+- Maintain timestamps on all calls to compute waiting time and trigger escalation/abandonment.
+- Ensure agent scheduling picks high-priority calls first each `TICK` before considering general calls.
+
+---
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome. Please open an issue or submit a pull request with a clear description of the change.
+
+---
+
+## License
+
+Include your license here (e.g., MIT). If you don't have one yet, consider adding an open-source license.
+
+---
+
+If you'd like, I can:
+- Add usage examples with sample command sequences and expected output,
+- Provide a "How to run" section with build/run instructions,
+- Or format the README with badges and CI links.
+Tell me which additions you prefer and I’ll update the file.
+````
