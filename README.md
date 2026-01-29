@@ -1,6 +1,3 @@
-I've rewritten and polished your README for clarity, structure, and visual appeal. Below is the updated README.md — review it and tell me if you'd like different wording, more examples, or expanded setup/run instructions.
-
-````markdown name=README.md url=https://github.com/amoori01/Intelligent-Call-Center-Director/blob/bc13d154c216dcd54af8b0df5eab2a7608391b3d/README.md
 # 🧠 Intelligent Call Center Director
 
 Simulate a busy call center that distributes calls to agents intelligently based on:
@@ -170,4 +167,3 @@ If you'd like, I can:
 - Provide a "How to run" section with build/run instructions,
 - Or format the README with badges and CI links.
 Tell me which additions you prefer and I’ll update the file.
-````
